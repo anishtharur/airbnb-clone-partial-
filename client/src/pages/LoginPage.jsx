@@ -19,7 +19,6 @@ const LoginPage = () => {
     }
   };
   if (redirect) {
-    console.log("navigating");
     return <Navigate to={"/"} />;
   }
   return (

@@ -9,3 +9,6 @@ input[type="text"],input[type="email"],input[type="password"]{
 button.primary{
     @apply bg-primary w-full rounded-2xl p-2 text-white
 }
+textarea{
+    @apply w-full border my-2 py-2 px-3 rounded-2xl;
+}
