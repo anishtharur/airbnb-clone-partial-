@@ -18,13 +18,17 @@ const PlacesPage = () => {
   const uploadPhoto = async (e) => {
     const files = e.target.files;
     const data = new FormData();
-    data.set("photos", files);
-    let response = await axios.post("/upload", data, {
+    for (let i = 0; i < files.length; i++) {
+      data.append("photos", files[i]);
+    }
+    const { data: filenames } = await axios.post("/upload", data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log(response);
+    setAddedPhotos((prev) => {
+      return [...prev, ...filenames];
+    });
   };
   const addPhotoByLink = async (e) => {
     e.preventDefault();
@@ -64,12 +68,12 @@ const PlacesPage = () => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              class="w-6 h-6"
+              className="w-6 h-6"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               />
             </svg>
             Add new place
@@ -116,9 +120,9 @@ const PlacesPage = () => {
             <div className="mt-2 grid grid-cols-3 md:grid-cols-4 gap-2">
               {addedPhotos.length > 0 &&
                 addedPhotos.map((link) => (
-                  <div key={`${link}`}>
+                  <div key={`${link}`} className="h-32 flex">
                     <img
-                      className="rounded-2xl"
+                      className="rounded-2xl w-full object-cover"
                       src={"http://localhost:4000/uploads/" + link}
                       alt={`${link}`}
                     />
@@ -132,13 +136,13 @@ const PlacesPage = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   stroke="currentColor"
-                  class="w-6 h-6"
+                  className="w-6 h-6"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                   />
                 </svg>
@@ -149,6 +153,7 @@ const PlacesPage = () => {
                 className="hidden"
                 id="upload"
                 onChange={uploadPhoto}
+                multiple
               />
             </div>
             {preInput("Description", "Description of the place")}
