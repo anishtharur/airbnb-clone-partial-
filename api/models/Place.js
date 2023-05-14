@@ -11,11 +11,11 @@ const placeSchema = new mongoose.Schema({
   description: String,
   perks: [String],
   extraInfo: String,
-  checkIn: Number,
-  checkOut: Number,
+  checkIn: String,
+  checkOut: String,
   maxGuests: Number,
 });
 
-const PlaceModel = new model("Place", placeSchema);
+const PlaceModel = new mongoose.model("Place", placeSchema);
 
 module.exports = PlaceModel;

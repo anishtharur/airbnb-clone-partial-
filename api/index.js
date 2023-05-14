@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
 const multer = require("multer");
 const fs = require("fs");
-
+const Place = require("./models/Place");
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtTokenSecret = "qwertyuiop";
 app.use("/uploads", express.static(__dirname + "/uploads"));
@@ -116,6 +116,40 @@ app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
     uploadedFiles.push(newPath.replace("uploads\\", ""));
   }
   res.json(uploadedFiles);
+});
+
+app.post("/places", async (req, res) => {
+  try {
+    console.log("Here");
+    const { token } = req.cookies;
+    const {
+      title,
+      address,
+      addedPhotos,
+      description,
+      perks,
+      checkin,
+      checkout,
+      maxGuests,
+      extraInfo,
+    } = req.body;
+    jwt.verify(token, jwtTokenSecret, {}, async (err, userData) => {
+      if (err) throw err;
+      const place = await Place.create({
+        owner: userData.id,
+        title: title,
+        address: address,
+        photos: addedPhotos,
+        description: description,
+        perks: perks,
+        extraInfo: extraInfo,
+        checkIn: checkin,
+        checkOut: checkout,
+        maxGuests: maxGuests,
+      });
+      res.json(place);
+    });
+  } catch (err) {}
 });
 
 app.listen(4000, () => {

@@ -1,52 +1,21 @@
 import React from "react";
 import { useState } from "react";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, Navigate, useNavigate } from "react-router-dom";
 import Perks from "./Perks";
 import axios from "axios";
+import PhotosUploader from "./PhotosUploader";
 const PlacesPage = () => {
   const [addPlace, setAddPlace] = useState(true);
   const [title, setTitle] = useState("");
   const [address, setaddress] = useState("");
   const [addedPhotos, setAddedPhotos] = useState([]);
-  const [photoLink, setPhotoLink] = useState("");
   const [description, setDescription] = useState("");
   const [perks, setPerks] = useState([]);
   const [extraInfo, setExtraInfo] = useState("");
   const [checkin, setCheckin] = useState("");
   const [checkout, setCheckout] = useState("");
   const [maxGuests, setMaxGuests] = useState(4);
-  const uploadPhoto = async (e) => {
-    const files = e.target.files;
-    const data = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      data.append("photos", files[i]);
-    }
-    const { data: filenames } = await axios.post("/upload", data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    setAddedPhotos((prev) => {
-      return [...prev, ...filenames];
-    });
-  };
-  const addPhotoByLink = async (e) => {
-    e.preventDefault();
-    try {
-      let { data: filename } = await axios.post("/upload-by-link", {
-        link: photoLink,
-      });
-      setAddedPhotos((prev) => {
-        return [
-          ...prev,
-          filename.split("/")[filename.split("/").length - 1].trim(),
-        ];
-      });
-      setPhotoLink("");
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const navigate = useNavigate();
   const preInput = (header, description) => {
     return (
       <>
@@ -55,7 +24,27 @@ const PlacesPage = () => {
       </>
     );
   };
-
+  const addNewPlace = async (e) => {
+    e.preventDefault();
+    try {
+      const dataInput = {
+        title,
+        address,
+        addedPhotos,
+        description,
+        perks,
+        checkin,
+        checkout,
+        maxGuests,
+        extraInfo,
+      };
+      const res = await axios.post("/places", dataInput);
+      console.log(res);
+      //navigate("/account/places");
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div>
       {addPlace && (
@@ -83,7 +72,7 @@ const PlacesPage = () => {
       )}
       {!addPlace && (
         <div className="ml-auto mr-auto max-w-xl pl-4 pr-4">
-          <form>
+          <form onSubmit={addNewPlace}>
             {preInput(
               "Title",
               "title should be short and catchy as in advertisement"
@@ -102,60 +91,10 @@ const PlacesPage = () => {
               onChange={(e) => setaddress(e.target.value)}
             />
             {preInput("Photos", "more=better")}
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Add photo using a link..."
-                value={photoLink}
-                onChange={(e) => setPhotoLink(e.target.value)}
-              />
-              <button
-                className="bg-gray-300 px-4 rounded-2xl text-xs font-bold"
-                onClick={addPhotoByLink}
-              >
-                Add&nbsp;Photo
-              </button>
-            </div>
-
-            <div className="mt-2 grid grid-cols-3 md:grid-cols-4 gap-2">
-              {addedPhotos.length > 0 &&
-                addedPhotos.map((link) => (
-                  <div key={`${link}`} className="h-32 flex">
-                    <img
-                      className="rounded-2xl w-full object-cover"
-                      src={"http://localhost:4000/uploads/" + link}
-                      alt={`${link}`}
-                    />
-                  </div>
-                ))}
-              <label
-                for="upload"
-                className="cursor-pointer border bg-transparent flex rounded-2xl text-gray-600 items-center p-4"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                  />
-                </svg>
-                <p className="text-sm text-center p-2">Upload from device</p>
-              </label>
-              <input
-                type="file"
-                className="hidden"
-                id="upload"
-                onChange={uploadPhoto}
-                multiple
-              />
-            </div>
+            <PhotosUploader
+              addedPhotos={addedPhotos}
+              onChange={setAddedPhotos}
+            />
             {preInput("Description", "Description of the place")}
             <textarea
               name=""
