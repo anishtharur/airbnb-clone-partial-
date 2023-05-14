@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Form, Link, Navigate, useNavigate } from "react-router-dom";
 import Perks from "./Perks";
 import axios from "axios";
 import PhotosUploader from "./PhotosUploader";
+import MyPlaces from "./MyPlaces";
 const PlacesPage = () => {
   const [addPlace, setAddPlace] = useState(true);
   const [title, setTitle] = useState("");
@@ -16,6 +17,18 @@ const PlacesPage = () => {
   const [checkout, setCheckout] = useState("");
   const [maxGuests, setMaxGuests] = useState(4);
   const navigate = useNavigate();
+  const [places, setPlaces] = useState([]);
+
+  useEffect(() => {
+    const getPlaces = async () => {
+      let { data } = await axios.get("/places");
+      console.log("Data", data);
+      setPlaces(data);
+    };
+    getPlaces();
+    return () => {};
+  }, []);
+
   const preInput = (header, description) => {
     return (
       <>
@@ -50,7 +63,7 @@ const PlacesPage = () => {
   return (
     <div>
       {addPlace && (
-        <div className="text-center">
+        <div className="text-center ml-auto mr-auto max-w-xl pl-4 pr-4">
           <Link
             to={`/account/places/new`}
             onClick={() => setAddPlace(false)}
@@ -70,7 +83,7 @@ const PlacesPage = () => {
             </svg>
             Add new place
           </Link>
-          <div>my places</div>
+          {places.length > 0 && <MyPlaces places={places} />}
         </div>
       )}
       {!addPlace && (

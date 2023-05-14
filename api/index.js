@@ -151,6 +151,17 @@ app.post("/places", async (req, res) => {
   } catch (err) {}
 });
 
+app.get("/places", async (req, res) => {
+  try {
+    const { token } = req.cookies;
+    jwt.verify(token, jwtTokenSecret, {}, async (err, userData) => {
+      res.json(await Place.find({ owner: userData.id }));
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 app.listen(4000, () => {
   console.log("Listening to 4000");
 });
