@@ -120,7 +120,6 @@ app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
 
 app.post("/places", async (req, res) => {
   try {
-    console.log("Here");
     const { token } = req.cookies;
     const {
       title,

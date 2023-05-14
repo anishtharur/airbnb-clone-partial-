@@ -40,7 +40,9 @@ const PlacesPage = () => {
       };
       const res = await axios.post("/places", dataInput);
       console.log(res);
-      //navigate("/account/places");
+      navigate("/account/places");
+      window.location.reload();
+      setAddPlace(true);
     } catch (err) {
       console.log(err);
     }
@@ -50,6 +52,7 @@ const PlacesPage = () => {
       {addPlace && (
         <div className="text-center">
           <Link
+            to={`/account/places/new`}
             onClick={() => setAddPlace(false)}
             className="inline-flex gap-2 bg-primary text-white rounded-full px-5 py-2 "
           >
