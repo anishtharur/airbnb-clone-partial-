@@ -1,11 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { UserContext } from "../UserContext";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import PlacesPage from "./PlacesPage";
 const Account = () => {
   const { user, ready, setUser } = useContext(UserContext);
-
   const navigate = useNavigate();
   let { subpage } = useParams();
   if (subpage === undefined) {
@@ -33,6 +32,8 @@ const Account = () => {
       setUser(null);
     }
   };
+
+  useEffect(() => {}, []);
   return (
     <div>
       <nav className="w-full flex mt-8 gap-2 justify-center mb-6">
