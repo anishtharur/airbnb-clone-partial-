@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Form, Link, Navigate, useNavigate } from "react-router-dom";
+import { Form, Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import Perks from "./Perks";
 import axios from "axios";
 import PhotosUploader from "./PhotosUploader";
@@ -16,9 +16,10 @@ const PlacesPage = () => {
   const [checkin, setCheckin] = useState("");
   const [checkout, setCheckout] = useState("");
   const [maxGuests, setMaxGuests] = useState(4);
+  // const [getId, setId]=useState('');
   const navigate = useNavigate();
   const [places, setPlaces] = useState([]);
-
+  const { id } = useParams();
   useEffect(() => {
     const getPlaces = async () => {
       let { data } = await axios.get("/places");
