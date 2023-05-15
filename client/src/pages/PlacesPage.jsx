@@ -29,7 +29,26 @@ const PlacesPage = () => {
     getPlaces();
     return () => {};
   }, []);
-
+  useEffect(() => {
+    if (id !== undefined) {
+      const getPlacesbyId = async () => {
+        let { data } = await axios.get(`/places/${id}`);
+        if (data) {
+          setTitle(data.title);
+          setaddress(data.address);
+          setAddedPhotos(data.photos);
+          setDescription(data.description);
+          setPerks(data.perks);
+          setExtraInfo(data.extraInfo);
+          setCheckin(data.checkin);
+          setCheckout(data.checkout);
+          setMaxGuests(data.maxGuests);
+          setAddPlace(false);
+        }
+      };
+      getPlacesbyId();
+    }
+  }, [id]);
   const preInput = (header, description) => {
     return (
       <>
@@ -38,7 +57,7 @@ const PlacesPage = () => {
       </>
     );
   };
-  const addNewPlace = async (e) => {
+  const savePlace = async (e) => {
     e.preventDefault();
     try {
       const dataInput = {
@@ -52,8 +71,13 @@ const PlacesPage = () => {
         maxGuests,
         extraInfo,
       };
-      const res = await axios.post("/places", dataInput);
-      console.log(res);
+      if (id) {
+        //update
+        const res = await axios.pur(`/places/${id}`, { id, ...dataInput });
+      } else {
+        //save
+        const res = await axios.post("/places", dataInput);
+      }
       navigate("/account/places");
       window.location.reload();
       setAddPlace(true);
@@ -61,6 +85,7 @@ const PlacesPage = () => {
       console.log(err);
     }
   };
+
   return (
     <div>
       {addPlace && (
@@ -89,7 +114,7 @@ const PlacesPage = () => {
       )}
       {!addPlace && (
         <div className="ml-auto mr-auto max-w-xl pl-4 pr-4">
-          <form onSubmit={addNewPlace}>
+          <form onSubmit={savePlace}>
             {preInput(
               "Title",
               "title should be short and catchy as in advertisement"

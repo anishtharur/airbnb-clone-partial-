@@ -33,7 +33,6 @@ const Account = () => {
     }
   };
 
-  useEffect(() => {}, []);
   return (
     <div>
       <nav className="w-full flex mt-8 gap-2 justify-center mb-6">

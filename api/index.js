@@ -162,6 +162,15 @@ app.get("/places", async (req, res) => {
   }
 });
 
+app.get("/places/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    res.json(await Place.findById(id));
+  } catch (err) {
+    res.status(404).end();
+  }
+});
+//app.put("/places/:id");
 app.listen(4000, () => {
   console.log("Listening to 4000");
 });
