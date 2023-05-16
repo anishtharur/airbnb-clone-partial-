@@ -22,7 +22,7 @@ const PlacesPage = () => {
   const { id } = useParams();
   useEffect(() => {
     const getPlaces = async () => {
-      let { data } = await axios.get("/places");
+      let { data } = await axios.get("/user-places");
       console.log("Data", data);
       setPlaces(data);
     };

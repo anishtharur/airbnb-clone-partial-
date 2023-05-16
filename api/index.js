@@ -151,7 +151,7 @@ app.post("/places", async (req, res) => {
   } catch (err) {}
 });
 
-app.get("/places", async (req, res) => {
+app.get("/user-places", async (req, res) => {
   try {
     const { token } = req.cookies;
     jwt.verify(token, jwtTokenSecret, {}, async (err, userData) => {
@@ -170,6 +170,7 @@ app.get("/places/:id", async (req, res) => {
     res.status(404).end();
   }
 });
+
 app.put("/places/:id", async (req, res) => {
   try {
     const {
@@ -208,6 +209,11 @@ app.put("/places/:id", async (req, res) => {
     res.json(err);
   }
 });
+
+app.get("/places", async (req, res) => {
+  res.json(await Place.find({}));
+});
+
 app.listen(4000, () => {
   console.log("Listening to 4000");
 });
