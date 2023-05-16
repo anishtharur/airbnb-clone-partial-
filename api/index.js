@@ -170,7 +170,44 @@ app.get("/places/:id", async (req, res) => {
     res.status(404).end();
   }
 });
-//app.put("/places/:id");
+app.put("/places/:id", async (req, res) => {
+  try {
+    const {
+      id,
+      title,
+      address,
+      addedPhotos,
+      description,
+      perks,
+      checkin,
+      checkout,
+      maxGuests,
+      extraInfo,
+    } = req.body;
+    const { token } = req.cookies;
+    console.log(token);
+    jwt.verify(token, jwtTokenSecret, {}, async (err, userData) => {
+      const placeDoc = await Place.findById(id);
+      if (userData.id === placeDoc.owner.toString()) {
+        placeDoc.set({
+          title: title,
+          address: address,
+          photos: addedPhotos,
+          description: description,
+          perks: perks,
+          extraInfo: extraInfo,
+          checkIn: checkin,
+          checkOut: checkout,
+          maxGuests: maxGuests,
+        });
+        let data = await placeDoc.save();
+        res.json(data);
+      }
+    });
+  } catch (err) {
+    res.json(err);
+  }
+});
 app.listen(4000, () => {
   console.log("Listening to 4000");
 });

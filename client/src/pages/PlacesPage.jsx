@@ -73,7 +73,7 @@ const PlacesPage = () => {
       };
       if (id) {
         //update
-        const res = await axios.pur(`/places/${id}`, { id, ...dataInput });
+        const res = await axios.put(`/places/${id}`, { id, ...dataInput });
       } else {
         //save
         const res = await axios.post("/places", dataInput);
@@ -90,6 +90,7 @@ const PlacesPage = () => {
     <div>
       {addPlace && (
         <div className="text-center ml-auto mr-auto max-w-xl pl-4 pr-4">
+          {places.length > 0 && <MyPlaces places={places} />}
           <Link
             to={`/account/places/new`}
             onClick={() => setAddPlace(false)}
@@ -109,7 +110,6 @@ const PlacesPage = () => {
             </svg>
             Add new place
           </Link>
-          {places.length > 0 && <MyPlaces places={places} />}
         </div>
       )}
       {!addPlace && (
