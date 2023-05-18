@@ -16,6 +16,7 @@ const PlacesPage = () => {
   const [checkin, setCheckin] = useState("");
   const [checkout, setCheckout] = useState("");
   const [maxGuests, setMaxGuests] = useState(4);
+  const [price, setPrice] = useState(100);
   // const [getId, setId]=useState('');
   const navigate = useNavigate();
   const [places, setPlaces] = useState([]);
@@ -44,6 +45,7 @@ const PlacesPage = () => {
           setCheckout(data.checkout);
           setMaxGuests(data.maxGuests);
           setAddPlace(false);
+          setPrice(data.price);
         }
       };
       getPlacesbyId();
@@ -70,6 +72,7 @@ const PlacesPage = () => {
         checkout,
         maxGuests,
         extraInfo,
+        price,
       };
       if (id) {
         //update
@@ -150,7 +153,7 @@ const PlacesPage = () => {
             <div className="grid grid-cols-2 md:grid-col-2 lg:grid-col-4 gap-1">
               <Perks selected={perks} onChange={setPerks} />
             </div>
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-2 gap-2">
               <div>
                 <h2 className="text-md mt-4">Check-in time:</h2>
                 <input
@@ -176,6 +179,15 @@ const PlacesPage = () => {
                   placeholder="0"
                   value={maxGuests}
                   onChange={(e) => setMaxGuests(e.target.value)}
+                />
+              </div>
+              <div>
+                <h2 className="text-md mt-4">Price:</h2>
+                <input
+                  type="number"
+                  placeholder="100"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
                 />
               </div>
             </div>

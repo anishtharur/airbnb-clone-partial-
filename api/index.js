@@ -131,6 +131,7 @@ app.post("/places", async (req, res) => {
       checkout,
       maxGuests,
       extraInfo,
+      price,
     } = req.body;
     jwt.verify(token, jwtTokenSecret, {}, async (err, userData) => {
       if (err) throw err;
@@ -145,6 +146,7 @@ app.post("/places", async (req, res) => {
         checkIn: checkin,
         checkOut: checkout,
         maxGuests: maxGuests,
+        price: price,
       });
       res.json(place);
     });
@@ -184,12 +186,13 @@ app.put("/places/:id", async (req, res) => {
       checkout,
       maxGuests,
       extraInfo,
+      price,
     } = req.body;
     const { token } = req.cookies;
-    console.log(token);
     jwt.verify(token, jwtTokenSecret, {}, async (err, userData) => {
       const placeDoc = await Place.findById(id);
       if (userData.id === placeDoc.owner.toString()) {
+        console.log(price);
         placeDoc.set({
           title: title,
           address: address,
@@ -200,8 +203,10 @@ app.put("/places/:id", async (req, res) => {
           checkIn: checkin,
           checkOut: checkout,
           maxGuests: maxGuests,
+          price: price,
         });
         let data = await placeDoc.save();
+        console.log(data);
         res.json(data);
       }
     });
