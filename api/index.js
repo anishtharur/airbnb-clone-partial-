@@ -192,7 +192,6 @@ app.put("/places/:id", async (req, res) => {
     jwt.verify(token, jwtTokenSecret, {}, async (err, userData) => {
       const placeDoc = await Place.findById(id);
       if (userData.id === placeDoc.owner.toString()) {
-        console.log(price);
         placeDoc.set({
           title: title,
           address: address,
@@ -206,7 +205,6 @@ app.put("/places/:id", async (req, res) => {
           price: price,
         });
         let data = await placeDoc.save();
-        console.log(data);
         res.json(data);
       }
     });
