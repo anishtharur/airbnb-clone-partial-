@@ -27,37 +27,37 @@ const PlacePage = () => {
       >
         {place.address}
       </a>
-      <div className="grid gap-2 grid-cols-[2fr_1fr]">
-        <div>
-          <div>
-            {place.photos?.[0] && (
-              <img
-                className="aspect-square object-cover"
-                src={"http://localhost:4000/uploads/" + place.photos[0]}
-                alt=""
-              />
-            )}
-          </div>
-        </div>
-        <div className="grid ">
-          {place.photos?.[1] && (
+      <div className="relative">
+        <div className="grid gap-2 grid-cols-[2fr_1fr]">
+          {place.photos?.[0] && (
             <img
               className="aspect-square object-cover"
-              src={"http://localhost:4000/uploads/" + place.photos[1]}
+              src={"http://localhost:4000/uploads/" + place.photos[0]}
               alt=""
             />
           )}
-          <div className="overflow-hidden">
-            {place.photos?.[2] && (
+          <div className="grid object-cover">
+            {place.photos?.[1] && (
               <img
-                className="aspect-square object-cover relative top-2"
-                src={"http://localhost:4000/uploads/" + place.photos[2]}
+                className="aspect-square object-cover"
+                src={"http://localhost:4000/uploads/" + place.photos[1]}
                 alt=""
               />
             )}
+            <div className="overflow-hidden">
+              {place.photos?.[2] && (
+                <img
+                  className="aspect-square object-cover relative top-2"
+                  src={"http://localhost:4000/uploads/" + place.photos[2]}
+                  alt=""
+                />
+              )}
+            </div>
           </div>
         </div>
-        <div>okk</div>
+        <button className="absolute bottom-2 right-2 py-2 px-4 bg-white rounded-2xl shadow-md shadow-gray-500">
+          show all photos
+        </button>
       </div>
     </div>
   );
